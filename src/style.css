@@ -408,6 +408,101 @@ input[type=range] {
   100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
 }
 
+/* Audio Cards */
+.audio-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 2rem;
+}
+
+.audio-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: var(--transition-smooth);
+}
+
+.audio-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgba(212, 154, 137, 0.2);
+  border-color: rgba(212, 154, 137, 0.3);
+}
+
+.audio-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--accent-light);
+  margin: 0;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.audio-play-btn {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-dark));
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+}
+
+.audio-play-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(212, 154, 137, 0.5);
+}
+
+.audio-progress {
+  flex-grow: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.audio-progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(212, 154, 137, 0.8);
+}
+
+.audio-progress::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(212, 154, 137, 0.8);
+}
+
+.audio-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  min-width: 75px;
+  text-align: right;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
   .elegant-title { font-size: 2.2rem; }

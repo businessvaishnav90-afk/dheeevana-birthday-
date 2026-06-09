@@ -1,4 +1,6 @@
 import './style.css';
+import { voiceNotesConfig } from './voiceNotesConfig.js';
+import { myMessagesConfig } from './myMessagesConfig.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Elements
@@ -190,5 +192,282 @@ Happy Birthday, Dheevana.`;
       modal.classList.add('hidden');
     }
   });
+
+  // --- Main Voices Section Logic ---
+  const mainVoicesContainer = document.getElementById('main-voices-container');
+  
+  if (mainVoicesContainer) {
+    // Generate cards dynamically from config
+    mainVoicesContainer.innerHTML = voiceNotesConfig.map((note, index) => `
+      <div class="audio-card glass fade-in" style="transition-delay: ${(index % 10) * 0.1}s">
+        <h3 class="audio-title">${note.title}</h3>
+        <div class="audio-controls">
+          <button class="audio-play-btn main-play-btn" data-id="voice-${note.id}"><i class="fas fa-play"></i></button>
+          <input type="range" class="audio-progress main-progress" data-id="voice-${note.id}" value="0" min="0" max="100" step="0.1">
+          <span class="audio-time main-time" data-id="voice-${note.id}">0:00 / 0:00</span>
+        </div>
+        <p class="audio-caption" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: -0.5rem; font-style: italic;">${note.caption}</p>
+        <audio id="voice-${note.id}" src="${note.file}" preload="metadata"></audio>
+      </div>
+    `).join('');
+
+    const formatTime = (seconds) => {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const mainCards = mainVoicesContainer.querySelectorAll('.audio-card');
+    
+    mainCards.forEach(card => {
+      const playBtn = card.querySelector('.main-play-btn');
+      const progressBar = card.querySelector('.main-progress');
+      const timeDisplay = card.querySelector('.main-time');
+      const audio = document.getElementById(playBtn.dataset.id);
+      
+      const setMetadata = () => {
+        if (!isNaN(audio.duration)) {
+          progressBar.max = audio.duration;
+          timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+        }
+      };
+
+      if (audio.readyState >= 1) {
+        setMetadata();
+      } else {
+        audio.addEventListener('loadedmetadata', setMetadata);
+      }
+
+      playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+          // Pause all other audios globally
+          const globalAudios = document.querySelectorAll('audio:not(#bg-music)');
+          globalAudios.forEach(a => {
+            if (a !== audio && !a.paused) {
+              a.pause();
+              let btn = document.querySelector(`.main-play-btn[data-id="${a.id}"]`) || 
+                        document.querySelector(`.dynamic-play-btn[data-id="${a.id}"]`) ||
+                        document.querySelector(`.my-msg-play-btn[data-id="${a.id}"]`);
+              if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+          });
+          
+          if (isPlaying) {
+            bgMusic.pause();
+            isPlaying = false;
+            updatePlayIcon();
+          }
+
+          audio.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+          audio.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        progressBar.value = audio.currentTime;
+        timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        if (audio.currentTime >= audio.duration) {
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          progressBar.value = 0;
+        }
+      });
+
+      progressBar.addEventListener('input', () => {
+        audio.currentTime = progressBar.value;
+      });
+    });
+  }
+
+  // --- A Message From Me Section Logic ---
+  const myMessagesContainer = document.getElementById('my-messages-container');
+  
+  if (myMessagesContainer) {
+    myMessagesContainer.innerHTML = myMessagesConfig.map((msg, index) => `
+      <div class="audio-card glass fade-in" style="transition-delay: ${(index % 10) * 0.1}s">
+        <h3 class="audio-title">${msg.title}</h3>
+        <p class="audio-caption" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem; font-style: italic;">${msg.subtitle}</p>
+        <div class="audio-controls">
+          <button class="audio-play-btn my-msg-play-btn" data-id="my-msg-${msg.id}"><i class="fas fa-play"></i></button>
+          <input type="range" class="audio-progress my-msg-progress" data-id="my-msg-${msg.id}" value="0" min="0" max="100" step="0.1">
+          <span class="audio-time my-msg-time" data-id="my-msg-${msg.id}">0:00 / 0:00</span>
+        </div>
+        <audio id="my-msg-${msg.id}" src="${msg.file}" preload="metadata"></audio>
+      </div>
+    `).join('');
+
+    const formatTime = (seconds) => {
+      if (isNaN(seconds)) return "0:00";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const myMsgCards = myMessagesContainer.querySelectorAll('.audio-card');
+    
+    myMsgCards.forEach(card => {
+      const playBtn = card.querySelector('.my-msg-play-btn');
+      const progressBar = card.querySelector('.my-msg-progress');
+      const timeDisplay = card.querySelector('.my-msg-time');
+      const audio = document.getElementById(playBtn.dataset.id);
+      
+      const setMetadata = () => {
+        if (!isNaN(audio.duration)) {
+          progressBar.max = audio.duration;
+          timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+        }
+      };
+
+      if (audio.readyState >= 1) {
+        setMetadata();
+      } else {
+        audio.addEventListener('loadedmetadata', setMetadata);
+      }
+
+      playBtn.addEventListener('click', () => {
+        if (audio.paused) {
+          // Pause all other audios globally
+          const globalAudios = document.querySelectorAll('audio:not(#bg-music)');
+          globalAudios.forEach(a => {
+            if (a !== audio && !a.paused) {
+              a.pause();
+              let btn = document.querySelector(`.main-play-btn[data-id="${a.id}"]`) || 
+                        document.querySelector(`.dynamic-play-btn[data-id="${a.id}"]`) ||
+                        document.querySelector(`.my-msg-play-btn[data-id="${a.id}"]`);
+              if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+          });
+          
+          if (isPlaying) {
+            bgMusic.pause();
+            isPlaying = false;
+            updatePlayIcon();
+          }
+
+          audio.play();
+          playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+          audio.pause();
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        progressBar.value = audio.currentTime;
+        timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        if (audio.currentTime >= audio.duration) {
+          playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          progressBar.value = 0;
+        }
+      });
+
+      progressBar.addEventListener('input', () => {
+        audio.currentTime = progressBar.value;
+      });
+    });
+  }
+
+  // --- Hidden Surprise Section Logic ---
+  const unlockBtn = document.getElementById('unlock-old-dheeevana-btn');
+  const hiddenSection = document.getElementById('old-dheeevana-section');
+  const voiceNotesContainer = document.getElementById('voice-notes-container');
+
+  if (unlockBtn && hiddenSection && voiceNotesContainer) {
+    unlockBtn.addEventListener('click', () => {
+      unlockBtn.classList.add('hidden');
+      hiddenSection.classList.remove('hidden');
+      
+      // Generate cards dynamically
+      voiceNotesContainer.innerHTML = voiceNotesConfig.map((note, index) => `
+        <div class="audio-card glass fade-in visible" style="transition-delay: ${(index % 10) * 0.1}s">
+          <h3 class="audio-title">${note.title}</h3>
+          <div class="audio-controls">
+            <button class="audio-play-btn dynamic-play-btn" data-id="hidden-${note.id}"><i class="fas fa-play"></i></button>
+            <input type="range" class="audio-progress dynamic-progress" data-id="hidden-${note.id}" value="0" min="0" max="100" step="0.1">
+            <span class="audio-time dynamic-time" data-id="hidden-${note.id}">0:00 / 0:00</span>
+          </div>
+          <p class="audio-caption" style="color: var(--text-secondary); font-size: 0.9rem; margin-top: -0.5rem; font-style: italic;">${note.caption}</p>
+          <audio id="hidden-${note.id}" src="${note.file}" preload="metadata"></audio>
+        </div>
+      `).join('');
+
+      // Initialize dynamic audio logic
+      const dynamicCards = voiceNotesContainer.querySelectorAll('.audio-card');
+      
+      dynamicCards.forEach(card => {
+        const playBtn = card.querySelector('.dynamic-play-btn');
+        const progressBar = card.querySelector('.dynamic-progress');
+        const timeDisplay = card.querySelector('.dynamic-time');
+        const audio = document.getElementById(playBtn.dataset.id);
+        
+        const setMetadata = () => {
+          if (!isNaN(audio.duration)) {
+            progressBar.max = audio.duration;
+            timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+          }
+        };
+
+        if (audio.readyState >= 1) {
+          setMetadata();
+        } else {
+          audio.addEventListener('loadedmetadata', setMetadata);
+        }
+
+        playBtn.addEventListener('click', () => {
+          if (audio.paused) {
+            // Pause all other audios globally to prevent overlapping
+            const globalAudios = document.querySelectorAll('audio:not(#bg-music)');
+            globalAudios.forEach(a => {
+              if (a !== audio && !a.paused) {
+                a.pause();
+                // Reset play button icon depending on which section it belongs to
+                let btn;
+                if (a.id.startsWith('hidden-')) {
+                   btn = document.querySelector(`.dynamic-play-btn[data-id="${a.id}"]`);
+                } else if (a.id.startsWith('voice-')) {
+                   btn = document.querySelector(`.main-play-btn[data-id="${a.id}"]`);
+                } else if (a.id.startsWith('my-msg-')) {
+                   btn = document.querySelector(`.my-msg-play-btn[data-id="${a.id}"]`);
+                }
+                if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+              }
+            });
+            
+            // Pause bg music
+            if (isPlaying) {
+              bgMusic.pause();
+              isPlaying = false;
+              updatePlayIcon();
+            }
+
+            audio.play();
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+          } else {
+            audio.pause();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+          }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+          progressBar.value = audio.currentTime;
+          timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+          if (audio.currentTime >= audio.duration) {
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            progressBar.value = 0;
+          }
+        });
+
+        progressBar.addEventListener('input', () => {
+          audio.currentTime = progressBar.value;
+        });
+      });
+      
+      // Fire confetti when unlocked
+      fireConfetti();
+    });
+  }
 
 });
