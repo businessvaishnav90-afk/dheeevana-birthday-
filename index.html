@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy 19th Birthday Devana Pradeep</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- Audio Element -->
+    <audio id="bg-music" loop>
+      <!-- The user will provide this file -->
+      <source src="/music/deewana-deewana.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Controls -->
+    <div class="music-controls glass hidden" id="music-controls">
+      <button id="play-btn" class="control-btn" title="Play/Pause"><i class="fas fa-pause"></i></button>
+      <button id="mute-btn" class="control-btn" title="Mute/Unmute"><i class="fas fa-volume-up"></i></button>
+      <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" title="Volume">
+    </div>
+
+    <!-- Start Overlay -->
+    <div id="start-overlay" class="overlay">
+      <div class="overlay-content glass">
+        <h2>A Special Gift For You</h2>
+        <p>Turn on your volume for the best experience</p>
+        <button id="start-celebration" class="primary-btn">Start Celebration <i class="fas fa-sparkles"></i></button>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="main-content" class="hidden">
+      <!-- Particles Container -->
+      <div id="particles"></div>
+
+      <!-- Hero Section -->
+      <section id="hero" class="fullscreen-section">
+        <div class="glass-card fade-in">
+          <h1 class="elegant-title">Happy 19th Birthday, <br> <span class="highlight">Devana Pradeep!</span></h1>
+          <p class="subtitle">A small gift made especially for Kalamandalam Dheevana.</p>
+        </div>
+        <div class="scroll-indicator">
+          <span>Scroll down</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </section>
+
+      <!-- Photo Memories Section -->
+      <section id="memories" class="section">
+        <h2 class="section-title fade-in" style="margin-bottom: 1rem;">A Collection of Smiles</h2>
+        <p class="subtitle fade-in" style="margin-bottom: 3rem; text-align: center;">Every smile tells a story, and these are a few worth remembering.</p>
+        <div class="gallery">
+          <div class="gallery-item fade-in" style="transition-delay: 0.1s">
+            <img src="/images/photo1.jpg" alt="Memory 1" onerror="this.src='https://images.unsplash.com/photo-1511895426328-dc8714191300?w=500&q=80'" class="gallery-img">
+            <div class="img-overlay"><i class="fas fa-expand"></i></div>
+          </div>
+          <div class="gallery-item fade-in" style="transition-delay: 0.2s">
+            <img src="/images/photo2.jpg" alt="Memory 2" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80'" class="gallery-img">
+            <div class="img-overlay"><i class="fas fa-expand"></i></div>
+          </div>
+          <div class="gallery-item fade-in" style="transition-delay: 0.3s">
+            <img src="/images/photo3.jpg" alt="Memory 3" onerror="this.src='https://images.unsplash.com/photo-1530103862676-de8892b12fa6?w=500&q=80'" class="gallery-img">
+            <div class="img-overlay"><i class="fas fa-expand"></i></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Fullscreen Image Modal -->
+      <div id="image-modal" class="modal hidden">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modal-img">
+      </div>
+
+      <!-- Friendship Appreciation Section -->
+      <section id="appreciation" class="section">
+        <div class="cards-container">
+          <div class="appreciation-card glass fade-in" style="transition-delay: 0.1s">
+            <i class="fas fa-heart icon pulse"></i>
+            <p>Thank you for being my friend.</p>
+          </div>
+          <div class="appreciation-card glass fade-in" style="transition-delay: 0.2s">
+            <i class="fas fa-star icon floating"></i>
+            <p>Your friendship means a lot to me.</p>
+          </div>
+          <div class="appreciation-card glass fade-in" style="transition-delay: 0.3s">
+            <i class="fas fa-sun icon spin-slow"></i>
+            <p>You have brought many good things into my life, even in ways you may not realize.</p>
+          </div>
+          <div class="appreciation-card glass fade-in" style="transition-delay: 0.4s">
+            <i class="fas fa-gift icon bounce"></i>
+            <p>Wishing you happiness, success, and good health.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personal Message Section -->
+      <section id="personal-message" class="section">
+        <div class="message-container glass fade-in">
+          <div id="typewriter-text" class="typewriter"></div>
+        </div>
+      </section>
+
+      <!-- Surprise Section -->
+      <section id="surprise" class="section">
+        <div class="surprise-container fade-in">
+          <button id="open-surprise-btn" class="primary-btn glow">Open Surprise</button>
+          <div id="surprise-content" class="hidden">
+            <div class="sparkles"></div>
+            <h2 class="elegant-title shine-text">You are amazing!</h2>
+            <p class="subtitle">May your days be filled with endless joy and laughter.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final Celebration Section -->
+      <section id="final" class="fullscreen-section">
+        <div class="final-card glass fade-in">
+          <p class="final-message">
+            Dheevana,<br><br>
+            I will always value you and our friendship.<br>
+            No matter how much time passes, you can always ask me for help whenever you need it.<br>
+            Whether it is tomorrow, next year, or many years from now, I will always wish the best for you.<br><br>
+            <span class="highlight">Happy Birthday</span> and thank you for being part of my life.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
